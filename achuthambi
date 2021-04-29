@@ -1,0 +1,36 @@
+const puppeteer = require('puppeteer');
+(async() => {
+  let weburl = 'https://prefeitura.pbh.gov.br/saude/licitacao/pregao-eletronico-151-2020';
+  let browser  =  await puppeteer.launch();
+  let page = await browser.newPage();
+  await page.goto(weburl, {waitUntil:'networkidle2'});
+  await page.setDefaultNavigationTimeout(0);
+  let data = await page.evaluate(() => {
+    let pubdate = document.querySelector('div[class="view-content-wrap "]').innerText.split(/\n/)[1];
+    let obj = document.querySelector('div[class="view-content-wrap "]').innerText.split(/\n/)[4];
+    let objcount = document.querySelector('div[class="view-content-wrap "]').innerText.split(/\n/)[7];
+    let biddingdate = document.querySelector('div[class="view-content-wrap "]').innerText.split(/\n/)[27];
+    let tenderlink1 =  document.querySelector('.views-field.views-field-field-historico-da-licitacao table tbody').rows[0].querySelector('.field.field--name-field-icone.field--type-image a').getAttribute('href');
+    let tenderlink2 =  document.querySelector('.views-field.views-field-field-historico-da-licitacao table tbody').rows[1].querySelector('.field.field--name-field-icone.field--type-image a').getAttribute('href');
+    let tenderlink3 =  document.querySelector('.views-field.views-field-field-historico-da-licitacao table tbody').rows[2].querySelector('.field.field--name-field-icone.field--type-image a').getAttribute('href');
+    let tenderlink4 =  document.querySelector('.views-field.views-field-field-historico-da-licitacao table tbody').rows[3].querySelector('.field.field--name-field-icone.field--type-image a').getAttribute('href');
+    return {
+        pubdate,
+        objcount,
+        biddingdate,
+        tenderlink1,
+        tenderlink2,
+        tenderlink3,
+        tenderlink4
+        
+    }
+    
+  });
+  
+  console.log(data);
+
+  debugger;
+
+  await browser.close();
+  
+})();
